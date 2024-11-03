@@ -160,9 +160,9 @@ const Menu = () => {
                     {currentItems.map((item) => (
                         <div key={item.id} className="card shadow-xl relative mr-5 md:my-5">
                             <div className="card-body">
-                                <img src={item.image} alt={item.name} className="hover:scale-105 transition-all duration-300 md:h-72" />
+                                <img src={item.image} alt={item.name} className="object-cover h-full w-full rounded-lg hover:scale-105 transition-all duration-300 md:h-72" />
                                 <h2 className="card-title mt-2">{item.name}</h2>
-                                <p>Description of the item</p>
+                                <p>{item.recipe}</p>
                                 <div className="card-actions justify-between items-center mt-2">
                                     <h5 className="font-semibold">
                                         <span className="text-sm text-red">$</span> {item.price}

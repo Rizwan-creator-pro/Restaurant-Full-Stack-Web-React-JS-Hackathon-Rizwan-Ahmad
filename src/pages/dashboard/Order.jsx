@@ -40,7 +40,7 @@ const Order = () => {
             <div className="py-28 flex flex-col items-center justify-center">
                 <div className="text-center px-4 space-y-7">
                     <h2 className="md:text-5xl text-4xl font-bold md:leading-snug leading-snug">
-                        Track All Your<span className="text-green"> Orders</span>
+                        Track All Your<span className="text-orange"> Orders</span>
                     </h2>
                 </div>
             </div>
@@ -52,7 +52,7 @@ const Order = () => {
                         <div className="overflow-x-auto">
                             <table className="table">
                                 {/* Table Head */}
-                                <thead className="bg-green text-white rounded-sm">
+                                <thead className="bg-orange text-white rounded-sm">
                                     <tr>
                                         <th>#</th>
                                         <th>Order Date</th>
@@ -85,7 +85,7 @@ const Order = () => {
                     <div className="text-center mt-20">
                         <p>No orders found. Please add products to cart and check out.</p>
                         <Link to="/menu">
-                            <button className="btn bg-green text-white mt-3">Back to Menu</button>
+                            <button className="btn bg-orange text-white mt-3">Back to Menu</button>
                         </Link>
                     </div>
                 )}

@@ -64,7 +64,7 @@ const ForgetPassword = () => {
 
           {/* show success or error messages */}
           {successMessage && (
-            <p className="text-green-500 text-xs italic">{successMessage}</p>
+            <p className="text-orange-500 text-xs italic">{successMessage}</p>
           )}
           {errorMessage && (
             <p className="text-red-500 text-xs italic">{errorMessage}</p>
@@ -74,7 +74,7 @@ const ForgetPassword = () => {
           <div className="form-control mt-4">
             <input
               type="submit"
-              className="btn bg-green text-white w-full md:w-96 py-3"
+              className="btn bg-orange text-white w-full md:w-96 py-3"
               value="Send Reset Link"
             />
           </div>

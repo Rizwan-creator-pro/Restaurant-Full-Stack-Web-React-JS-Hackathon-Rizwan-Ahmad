@@ -105,7 +105,7 @@ const Users = () => {
             <div className="overflow-x-auto">
                 <table className="table table-zebra w-full md:w-[1200px] lg:w-[1400px]">
                     {/* Head */}
-                    <thead className="bg-green text-white rounded-lg">
+                    <thead className="bg-orange text-white rounded-lg">
                         <tr>
                             <th>#</th>
                             <th>Name</th>
