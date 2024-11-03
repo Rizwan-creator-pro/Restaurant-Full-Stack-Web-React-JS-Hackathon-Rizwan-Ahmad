@@ -1,39 +1,131 @@
-import React, { useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { FaRegUser } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { AuthContext } from "../contexts/AuthProvider";
 import Profile from "./Profile";
+import { Link } from "react-router-dom";
+// import useCart from "../hooks/useCart";
+import useAuth from "../hooks/useAuth";
+
+// Import the dark mode context
+// import { useDarkMode } from "../contexts/DarkModeContext";
 
 const Navbar = () => {
-  const { user, logOut } = useContext(AuthContext); // Access user and logOut from context
+  const [isSticky, setSticky] = useState(false);
+  const { user, loading } = useAuth();
+  // const [cart, refetch] = useCart();
 
-  const handleLogout = () => {
-    logOut()
-      .then(() => {
-        alert("Logged out successfully!"); // Optional: Show a logout success message
-      })
-      .catch((error) => {
-        console.error("Logout error:", error); // Handle logout error
-      });
-  };
+  // Get dark mode state and toggle function from context
+  // const { darkMode, toggleDarkMode } = useDarkMode();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (offset > 0) {
+        setSticky(true);
+      } else {
+        setSticky(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const navItems = (
+    <>
+      <li>
+        <Link className="text-red" to="/">
+          Home
+        </Link>
+      </li>
+      <li tabIndex={0}>
+        <Link to="/menu">Menu</Link>
+      </li>
+      <li tabIndex={0}>
+        <Link to="/table-booking">Table Booking</Link>
+      </li>
+      <li tabIndex={0}>
+        <Link to="/event-booking">Event Booking</Link>
+      </li>
+      <li>
+        <Link to="offers">Offers</Link>
+      </li>
+    </>
+  );
 
   return (
-    <div>
-      <div className="navbar bg-base-100 px-10">
-        <div className="flex-1">
-          <a className="btn btn-ghost text-xl">daisyUI</a>
+    <header
+      className={`max-w-screen-2xl container mx-auto fixed top-0 left-0 right-0 transition-all duration-300 ease-in-out `}
+    >
+      <div
+        className={`navbar xl:px-24 ${isSticky
+          ? "shadow-md bg-base-100 transition-all duration-300 ease-in-out"
+          : ""
+          }`}
+      >
+        <div className="navbar-start">
+          <div className="dropdown">
+            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h8m-8 6h16"
+                />
+              </svg>
+            </div>
+            <ul
+              tabIndex={0}
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+            >
+              {navItems}
+            </ul>
+          </div>
+          <Link className="btn btn-ghost text-xl" href="/">
+            <span className="text-red">Taste</span>Tribe
+          </Link>
         </div>
-        <div className="flex-none">
-          <div className="dropdown dropdown-end">
-            <div
+        <div className="navbar-center hidden lg:flex">
+          <ul className="menu menu-horizontal px-1">{navItems}</ul>
+        </div>
+        <div className="navbar-end">
+          {/* Search Button */}
+          <button className="btn btn-ghost btn-circle lg:flex hidden">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className={`h-5 w-5`} // Change color based on dark mode
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </button>
+          {/* Cart */}
+          <Link to="cart-page">
+            <label
               tabIndex={0}
               role="button"
-              className="btn btn-ghost btn-circle"
+              className="btn btn-ghost btn-circle mr-3 flex items-center justify-center lg:flex"
             >
               <div className="indicator">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
+                  className={`h-5 w-5 `} // Change color based on dark mode
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -45,41 +137,65 @@ const Navbar = () => {
                     d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                   />
                 </svg>
-                <span className="badge badge-sm indicator-item">8</span>
+                <span className="badge badge-sm indicator-item">
+                  {/* {cart.length || 0} */}
+                </span>
               </div>
-            </div>
-            <div
-              tabIndex={0}
-              className="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-52 shadow"
-            >
-              <div className="card-body">
-                <span className="text-lg font-bold">8 Items</span>
-                <span className="text-info">Subtotal: $999</span>
-                <div className="card-actions">
-                  <button className="btn btn-primary btn-block">
-                    View cart
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+            </label>
+          </Link>
+          {/* Login */}
+          <div className="flex items-center justify-center">
+            {/* Dark Mode Toggle */}
+            <div className="me-5 lg:flex hidden">
+              <label className="grid cursor-pointer place-items-center">
 
-          {/* Conditionally render Login or Logout button */}
-          <div>
-            {user ? (
-              <Profile user={user} />
-            ) : (
-              <Link
-                to="/login"
-                className="btn flex items-center gap-2 rounded-full px-6 bg-green text-white"
-              >
-                <FaRegUser /> Login
-              </Link>
-            )}
+                <svg
+                  className="stroke-base-100 fill-base-100 col-start-1 row-start-1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="12" cy="12" r="5" />
+                  <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
+                </svg>
+                <svg
+                  className="stroke-base-100 fill-base-100 col-start-2 row-start-1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              </label>
+            </div>
+            <div>
+              {user ? (
+                <Profile user={user} />
+              ) : (
+                <Link
+                  to="/login"
+                  className="btn flex items-center gap-2 rounded-full px-6 bg-red text-white"
+                >
+                  <FaRegUser /> Login
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 

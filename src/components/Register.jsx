@@ -4,6 +4,8 @@ import { Link, Navigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthProvider";
 import { db } from "../firebase/firebase"; // Import Firestore instance
 import { doc, setDoc } from "firebase/firestore"; // Import Firestore methods
+import { toast } from "react-toastify"; // Import toast
+import 'react-toastify/dist/ReactToastify.css'; // Import toast CSS
 
 const Register = () => {
   const { createUser } = useContext(AuthContext);
@@ -24,12 +26,14 @@ const Register = () => {
     createUser(email, password)
       .then(async (result) => {
         const user = result.user;
-        alert("Registration Successful");
+        // Show success toast
+        toast.success("Registration Successful");
 
-        // Save user data to Firestore
+        // Save user data to Firestore with default role
         await setDoc(doc(db, "users", user.uid), {
           name: name,
           email: email,
+          role: "user", // Set default role
           createdAt: new Date().toISOString(), // Optional timestamp
         });
 
@@ -37,6 +41,8 @@ const Register = () => {
       })
       .catch((error) => {
         setErrorMessage("Please provide valid email & password!");
+        // Show error toast
+        toast.error("Please provide valid email & password!");
       });
   };
 
@@ -69,6 +75,7 @@ const Register = () => {
                 {...register("name", { required: true })}
               />
             </div>
+
             {/* email */}
             <div className="form-control">
               <label className="label">
@@ -107,7 +114,7 @@ const Register = () => {
             <div className="form-control mt-4">
               <input
                 type="submit"
-                className="btn bg-green text-white w-full md:w-96 py-3"
+                className="btn bg-red text-white w-full md:w-96 py-3"
                 value="Register"
               />
             </div>

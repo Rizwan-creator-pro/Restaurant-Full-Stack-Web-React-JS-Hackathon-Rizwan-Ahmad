@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import { AuthContext } from "../contexts/AuthProvider";
 import { db } from "../firebase/firebase"; // Import Firestore
 import { doc, getDoc } from "firebase/firestore"; // Import Firestore methods
+import { toast } from "react-toastify"; // Import toast
+import "react-toastify/dist/ReactToastify.css"; // Import CSS for styling
 
 const Login = () => {
   const { login } = useContext(AuthContext);
@@ -24,7 +26,9 @@ const Login = () => {
     try {
       const result = await login(email, password);
       const user = result.user;
-      alert("Login Successful");
+
+      // Show success toast notification
+      toast.success("Login Successful");
       setIsLoggedIn(true);
 
       // Fetch user data from Firestore
@@ -38,6 +42,8 @@ const Login = () => {
       }
     } catch (error) {
       setErrorMessage("Please provide valid email & password!");
+      // Show error toast notification
+      toast.error("Login failed. Please check your credentials.");
     }
   };
 
@@ -100,7 +106,7 @@ const Login = () => {
             <div className="form-control mt-4">
               <input
                 type="submit"
-                className="btn bg-green text-white w-full md:w-96 py-3"
+                className="btn bg-red text-white w-full md:w-96 py-3"
                 value="Login"
               />
             </div>
@@ -118,7 +124,7 @@ const Login = () => {
       {userData && (
         <div className="text-center mt-4">
           <h2>Welcome, {userData.name}!</h2>
-          {/* You can display other user information here */}
+          <p>Your role: {userData.role}</p> {/* Display the user's role */}
         </div>
       )}
     </div>
