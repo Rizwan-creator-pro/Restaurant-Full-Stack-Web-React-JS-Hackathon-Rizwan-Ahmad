@@ -114,14 +114,14 @@ const Register = () => {
             <div className="form-control mt-4">
               <input
                 type="submit"
-                className="btn bg-red text-white w-full md:w-96 py-3"
+                className="btn bg-orange text-white w-full md:w-96 py-3"
                 value="Register"
               />
             </div>
 
             <p className="text-center my-2">
               Already have an account?
-              <Link to="/login" className="underline text-red ml-1">
+              <Link to="/login" className="underline text-green ml-1">
                 Login Now
               </Link>
             </p>

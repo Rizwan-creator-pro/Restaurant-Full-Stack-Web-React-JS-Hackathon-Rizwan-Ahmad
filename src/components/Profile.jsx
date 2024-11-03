@@ -76,12 +76,12 @@ const Profile = ({ user }) => {
                 <a href="/update-profile">Profile</a>
               </li>
               <li>
-                <a href="/user-dashboard">User Dashboard</a>
+                <a href="/order">User Dashboard</a>
               </li>
               {/* Conditionally render Admin Dashboard link */}
               {isAdmin && (
                 <li>
-                  <Link to="/dashboard">Admin Dashboard</Link>
+                  <Link to="/dashboard/manage-items">Admin Dashboard</Link>
                 </li>
               )}
               <li>

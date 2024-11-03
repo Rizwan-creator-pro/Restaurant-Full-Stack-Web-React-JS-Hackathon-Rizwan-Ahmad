@@ -19,7 +19,7 @@ const Main = () => {
           <div className="min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white">
             <Outlet />
           </div>
-          <Footer/>
+          <Footer />
         </div>
       )}
     </div>

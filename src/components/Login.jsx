@@ -49,7 +49,7 @@ const Login = () => {
 
   // Redirect to the homepage if login is successful
   if (isLoggedIn) {
-    return <Navigate to="/" />;
+    return <Navigate to="/menu" />;
   }
 
   return (
@@ -106,13 +106,13 @@ const Login = () => {
             <div className="form-control mt-4">
               <input
                 type="submit"
-                className="btn bg-red text-white w-full md:w-96 py-3"
+                className="btn bg-orange text-white w-full md:w-96 py-3"
                 value="Login"
               />
             </div>
             <p className="text-center my-2">
               Don’t have an account?
-              <Link to="/register" className="underline text-red ml-1">
+              <Link to="/register" className="underline text-green ml-1">
                 Register Now
               </Link>
             </p>

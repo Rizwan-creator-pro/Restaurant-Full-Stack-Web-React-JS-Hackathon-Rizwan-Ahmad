@@ -51,7 +51,17 @@ const AuthProvider = ({ children }) => {
   // Check sign-in user status
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      if (currentUser) {
+        // Only set relevant user data
+        setUser({
+          uid: currentUser.uid,
+          displayName: currentUser.displayName,
+          email: currentUser.email,
+          photoURL: currentUser.photoURL,
+        });
+      } else {
+        setUser(null);
+      }
       setLoading(false); // Set loading to false once user state is determined
     });
     return () => unsubscribe();

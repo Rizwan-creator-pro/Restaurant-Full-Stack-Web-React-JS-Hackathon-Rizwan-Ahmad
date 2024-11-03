@@ -2,30 +2,33 @@ import React, { useState, useEffect } from "react";
 import { FaRegUser } from "react-icons/fa";
 import Profile from "./Profile";
 import { Link } from "react-router-dom";
-// import useCart from "../hooks/useCart";
 import useAuth from "../hooks/useAuth";
+import { getFirestore, collection, query, where, onSnapshot } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
 
-// Import the dark mode context
-// import { useDarkMode } from "../contexts/DarkModeContext";
+// Firebase configuration and initialization
+const firebaseConfig = {
+  apiKey: "AIzaSyAkAazjq8zz8Dt9B6oPBWPi7p0_XmhL-p4",
+  authDomain: "heckathon-e5480.firebaseapp.com",
+  projectId: "heckathon-e5480",
+  storageBucket: "heckathon-e5480.appspot.com",
+  messagingSenderId: "467898031586",
+  appId: "1:467898031586:web:1ac47f05ef11850ecaadbb"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 const Navbar = () => {
   const [isSticky, setSticky] = useState(false);
-  const { user, loading } = useAuth();
-  // const [cart, refetch] = useCart();
-
-  // Get dark mode state and toggle function from context
-  // const { darkMode, toggleDarkMode } = useDarkMode();
+  const { user, loading } = useAuth(); // Assuming useAuth hook gives user info
+  const [cartItems, setCartItems] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      const offset = window.scrollY;
-      if (offset > 0) {
-        setSticky(true);
-      } else {
-        setSticky(false);
-      }
+      setSticky(window.scrollY > 0);
     };
-
     window.addEventListener("scroll", handleScroll);
 
     return () => {
@@ -33,90 +36,43 @@ const Navbar = () => {
     };
   }, []);
 
+  // Fetch cart items from Firestore
+  useEffect(() => {
+    if (user && user.uid) {
+      const cartRef = collection(db, "cart");
+      const q = query(cartRef, where("userId", "==", user.uid));
+
+      // Real-time listener for the cart items count
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        setCartItems(snapshot.size); // Count of items in the user's cart
+      });
+
+      return () => unsubscribe();
+    }
+  }, [user]);
+
   const navItems = (
     <>
       <li>
-        <Link className="text-red" to="/">
-          Home
-        </Link>
-      </li>
-      <li tabIndex={0}>
-        <Link to="/menu">Menu</Link>
-      </li>
-      <li tabIndex={0}>
-        <Link to="/table-booking">Table Booking</Link>
-      </li>
-      <li tabIndex={0}>
-        <Link to="/event-booking">Event Booking</Link>
-      </li>
-      <li>
-        <Link to="offers">Offers</Link>
+        <Link className="text-orange" to="/menu">Menu</Link>
       </li>
     </>
   );
 
   return (
-    <header
-      className={`max-w-screen-2xl container mx-auto fixed top-0 left-0 right-0 transition-all duration-300 ease-in-out `}
-    >
-      <div
-        className={`navbar xl:px-24 ${isSticky
-          ? "shadow-md bg-base-100 transition-all duration-300 ease-in-out"
-          : ""
-          }`}
-      >
+    <header className={`max-w-screen-2xl container mx-auto fixed top-0 left-0 right-0 transition-all duration-300 ease-in-out`}>
+      <div className={`navbar xl:px-24 ${isSticky ? "shadow-md bg-base-100 transition-all duration-300 ease-in-out" : ""}`}>
         <div className="navbar-start">
-          <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h8m-8 6h16"
-                />
-              </svg>
-            </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-            >
-              {navItems}
-            </ul>
-          </div>
-          <Link className="btn btn-ghost text-xl" href="/">
-            <span className="text-red">Taste</span>Tribe
+          <Link className="btn btn-ghost text-xl" to="/">
+            <span className="text-orange">Taste</span>Tribe
           </Link>
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">{navItems}</ul>
         </div>
         <div className="navbar-end">
-          {/* Search Button */}
-          <button className="btn btn-ghost btn-circle lg:flex hidden">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className={`h-5 w-5`} // Change color based on dark mode
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button>
           {/* Cart */}
-          <Link to="cart-page">
+          <Link to="/cart-page">
             <label
               tabIndex={0}
               role="button"
@@ -125,7 +81,7 @@ const Navbar = () => {
               <div className="indicator">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className={`h-5 w-5 `} // Change color based on dark mode
+                  className="h-5 w-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -138,60 +94,20 @@ const Navbar = () => {
                   />
                 </svg>
                 <span className="badge badge-sm indicator-item">
-                  {/* {cart.length || 0} */}
+                  {cartItems}
                 </span>
               </div>
             </label>
           </Link>
-          {/* Login */}
-          <div className="flex items-center justify-center">
-            {/* Dark Mode Toggle */}
-            <div className="me-5 lg:flex hidden">
-              <label className="grid cursor-pointer place-items-center">
-
-                <svg
-                  className="stroke-base-100 fill-base-100 col-start-1 row-start-1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="5" />
-                  <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
-                </svg>
-                <svg
-                  className="stroke-base-100 fill-base-100 col-start-2 row-start-1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-              </label>
-            </div>
-            <div>
-              {user ? (
-                <Profile user={user} />
-              ) : (
-                <Link
-                  to="/login"
-                  className="btn flex items-center gap-2 rounded-full px-6 bg-red text-white"
-                >
-                  <FaRegUser /> Login
-                </Link>
-              )}
-            </div>
+          {/* User Profile */}
+          <div>
+            {user ? (
+              <Profile user={user} />
+            ) : (
+              <Link to="/login" className="btn flex items-center gap-2 rounded-full px-6 bg-orange text-white">
+                <FaRegUser /> Login
+              </Link>
+            )}
           </div>
         </div>
       </div>

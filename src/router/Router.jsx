@@ -11,6 +11,9 @@ import AddMenu from "../pages/dashboard/admin/AddMenu";
 import Menu from "../pages/shop/Menu";
 import ManageItems from "../pages/dashboard/admin/ManageItems";
 import Users from "../pages/dashboard/Users";
+import CartPage from "../pages/shop/CartPage";
+import Order from "../pages/dashboard/Order";
+import ManageBookings from "../pages/dashboard/admin/Manageorders";
 
 const router = createBrowserRouter([
   {
@@ -18,18 +21,18 @@ const router = createBrowserRouter([
     element: <Main />,
     children: [
       {
-        path: "/",
-        element: <Home />,
+        path: "/order",
+        element: <Order />,
       },
       {
         path: "/menu",
         element: <Menu />,
       },
       {
-        path: "/test",
+        path: "/cart-page",
         element: (
           <PrivateRouter>
-            <Testing />
+            <CartPage />
           </PrivateRouter>
         ),
       },
@@ -55,10 +58,6 @@ const router = createBrowserRouter([
       </PrivateRouter>
     ),
     children: [
-      // {
-      //   path: "",
-      //   element: <Dashboard />,
-      // },
       {
         path: "add-menu",
         element: <AddMenu />,
@@ -71,20 +70,10 @@ const router = createBrowserRouter([
         path: "manage-items",
         element: <ManageItems />,
       },
-      // {
-      //   path: "update-menu/:id",
-      //   element: <UpdateMenu />,
-      //   loader: ({ params }) =>
-      //     fetch(`http://localhost:6001/menu/${params.id}`),
-      // },
-      // {
-      //   path: "manage-bookings",
-      //   element: <ManageBookings />,
-      // },
-      // {
-      //   path: "create-offer",
-      //   element: <AdminOfferForm />,
-      // },
+      {
+        path: "manage-orders",
+        element: <ManageBookings />,
+      },
     ],
   },
 ]);

@@ -19,13 +19,8 @@ const sharedLinks = (
             </Link>
         </li>
         <li>
-            <Link to="/menu">
+            <Link to="manage-orders">
                 <FaLocationArrow /> Orders Tracking
-            </Link>
-        </li>
-        <li>
-            <Link to="/menu">
-                <FaQuestionCircle /> Customer Support
             </Link>
         </li>
     </>
